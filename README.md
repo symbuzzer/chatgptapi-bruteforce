@@ -1,2 +1,3 @@
-# chatgptapi-bruteforce
-secret api key finder for chatgpt based apis
+# secret api key finder for chatgpt based apis
+  
+download and run only
