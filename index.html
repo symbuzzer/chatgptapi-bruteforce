@@ -1,0 +1,159 @@
+<!doctype html>
+<html class="no-js" lang="tr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="çetcipiti heykır">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <title>çetcipiti heykır</title>
+
+        <style>
+		    body {
+		        position: fixed;
+		        height: 100%;
+                width: 98%;
+			    background-color: #000000;
+			    color: #39FF39;
+                text-align: center;
+                margin-left: 10px;
+                margin-right: 10px;
+		    }
+		    .footer {
+                position: fixed;
+                bottom: 0;
+                width: 100%;
+                text-align: center;
+            }
+            .elements {
+                margin-bottom: 5px;
+            }
+            a {
+                color: #39FF39;
+                text-decoration: none;
+            }
+            a:visited {
+                color: #39FF39;
+            }
+            button {
+                background-color: #39FF39;
+                color: #000000;
+                font-size: 15px;
+            }
+            canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-repeat: no-repeat;
+                background-size: cover;
+                z-index: -1;
+            }
+            @media screen and (min-width: 480px) {
+                .textarea {
+                    width: auto;
+                }
+            }
+            textarea {
+                resize: none;
+                width: 90%;
+                text-align: center;
+                background-color: #464646;
+                color: #39FF39;
+                border: 1px solid #cccccc;
+                border-radius: 10px;
+                overflow: scroll;
+            }
+            #chatgpt-status {
+                color: #FF3333;
+                height: 20px;
+            }
+            #chatgpt-status::-webkit-scrollbar{
+                width: 0;
+                height: 0;
+                background-color: transparent;
+            }
+            input {
+                resize: none;
+                width: 70%;
+                height: 25px;
+                text-align: center;
+                margin: 0 auto;
+                background-color: #464646;
+                color: #39FF39;
+                border: 1px solid #cccccc;
+                border-radius: 10px;
+                overflow: scroll;
+            }
+        </style>
+		
+		<script>				
+			async function callCHATGPT() {		
+				var xhr = new XMLHttpRequest();
+				var url = "https://api.pawan.krd/v1/chat/completions";
+				xhr.open("POST", url, true);
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.setRequestHeader("Authorization", "Bearer "+ apikey);
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === 4 && xhr.status === 200) {
+						document.getElementById("chatgpt-status").value = "api key bulundu ;) "+ apikey;
+					}
+					if (xhr.readyState === 4 && xhr.status === 401) {
+						document.getElementById("chatgpt-status").value = "api key hatalı :(";
+						location.reload();
+					}
+					if (xhr.readyState === 4 && xhr.status === 429) {
+						document.getElementById("chatgpt-status").value = "api key'in limiti dolu :(";
+						location.reload();
+					}
+					if (xhr.readyState === 4 && xhr.status === 400) {
+						document.getElementById("chatgpt-status").value = "api key başkasına ait :(";
+						location.reload();
+					}					
+				};
+				var data = JSON.stringify({
+					"messages": [{"role": "user", "content": "input"}],
+					"temperature": 0.5,
+					"top_p": 1,
+					"frequency_penalty": 0,
+					"presence_penalty": 0,
+					"model": "gpt-3.5-turbo"
+				});
+				await xhr.send(data);
+			}
+		</script>
+
+	<body onload="getKey();">
+        <div class="elements">
+            <h2><a href="">çetcipiti heykır v1.0.0</a></h2>
+        </div>
+
+        <div class="elements">
+            <textarea id="chatgpt-status" placeholder="hekliyorum, biraz bekle..." readonly></textarea>
+        </div>
+
+		<script>
+			function getKey() {
+			  const length = 48;
+			  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			  let result = "pk-";
+			  for (let i = 3; i < length; i++) {
+				result += characters.charAt(Math.floor(Math.random() * characters.length));
+			  }
+			  return result;
+			}
+
+			const apikey = getKey();
+			console.log(apikey);
+			var input = "test";	
+			callCHATGPT();
+		</script>
+
+
+        <div class="footer">
+            <p><a href="https://avalibeyaz.com/github" target="_blank">github</a> - <a href="https://avalibeyaz.com/patreon" target="_blank">patreon</a></p>
+        </div>
+
+    </body>
+</html>
